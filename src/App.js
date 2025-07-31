@@ -10,38 +10,48 @@ function App() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const runAudit = () => {
-    if (!contactName || !phone || !email || !business || !location) {
-      alert("Please fill in all fields before running the audit.");
-      return;
-    }
-
+  const runAudit = async () => {
     setLoading(true);
 
-    // 👉 Replace with your real backend, webhook or storage solution:
-    console.log("Audit submitted:", {
-      contactName,
-      phone,
-      email,
-      business,
-      location,
-    });
+    try {
+      await fetch("https://hook.eu2.make.com/oro7fxpewgxa31b8ke1aofxol60129xo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: contactName,
+          phone,
+          email,
+          business,
+          location,
+        }),
+      });
 
-    const simulatedResponse = {
-      directories: ["Google Business", "Yelp", "Bing Places"],
-      missing: ["Yelp"],
-      aiMention: false,
-      recommendations: [
-        "Create a Yelp profile with full business details.",
-        "Add structured FAQ to your website (schema.org markup).",
-        "Get mentioned on local blogs or Reddit threads.",
-      ],
-    };
+      console.log("Audit submitted:", {
+        contactName,
+        phone,
+        email,
+        business,
+        location,
+      });
 
-    setTimeout(() => {
+      // Simulated response for frontend display
+      const simulatedResponse = {
+        directories: ["Google Business", "Yelp", "Bing Places"],
+        missing: ["Yelp"],
+        aiMention: false,
+        recommendations: [
+          "Create a Yelp profile with full business details.",
+          "Add structured FAQ to your website (schema.org markup).",
+          "Get mentioned on local blogs or Reddit threads.",
+        ],
+      };
+
       setResults(simulatedResponse);
+    } catch (error) {
+      console.error("Error submitting to webhook:", error);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
