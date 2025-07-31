@@ -1,5 +1,4 @@
 {
-  // Specify that Vercel should use the Python runtime for our FastAPI app.
   "version": 2,
   "builds": [
     {
@@ -7,7 +6,6 @@
       "use": "@vercel/python"
     }
   ],
-  // Route all incoming requests to the FastAPI app defined in main.py
   "routes": [
     {
       "src": "/(.*)",
